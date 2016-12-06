@@ -1,3 +1,4 @@
 execv
 *.swp
 payload.*
+*.o
