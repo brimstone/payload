@@ -355,3 +355,26 @@ int dirtycow_run() {
 
     return 0;
 }
+
+void dirtycow_help(){
+	fprintf (stderr, "\nDirtycow info:\n");
+	fprintf (stderr, "Overrides /usr/bin/passwd in the process. Back is kept at /tmp/bak.\n");
+	fprintf (stderr, "Works up to:\n");
+	fprintf (stderr, "    Ubuntu 16.10     4.8.0-26.28\n");
+	fprintf (stderr, "    Ubuntu 16.04 LTS 4.4.0-45.66\n");
+	fprintf (stderr, "    Ubuntu 14.04 LTS 3.13.0-100.147\n");
+	fprintf (stderr, "    UBuntu 12.04 LTS 3.2.0-113.155\n");
+	fprintf (stderr, "    Debian 8         3.16.36-1+deb8u2\n");
+	fprintf (stderr, "    Debian 7         3.2.82-1\n");
+	fprintf (stderr, "    Debian unstable  4.7.8-1\n");
+	fprintf (stderr, "    ArchLinux        4.4.26-1\n");
+	fprintf (stderr, "    ArchLinux        4.8.3\n");
+	fprintf (stderr, "    RHEL/CentOS 6.7  kernel-2.6.32-573.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.6  kernel-2.6.32-504.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.5  kernel-2.6.32-431.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.4  kernel-2.6.32-358.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.3  kernel-2.6.32-279.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.2  kernel-2.6.32-220.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.1  kernel-2.6.32-131.x\n");
+	fprintf (stderr, "    RHEL/CentOS 6.0  kernel-2.6.32-71.x\n");
+}
