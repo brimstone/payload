@@ -1,5 +1,5 @@
 TARGET=payload.$(shell gcc -dumpmachine)
-OBJS=main.o cowroot.o action_local_shell.o
+OBJS=main.o cowroot.o action_local_shell.o action_reverse_shell.o
 
 all: ${TARGET}
 

